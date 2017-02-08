@@ -29,7 +29,7 @@ for file in $(ls -1 $liveDir); do
   fi
 
   # Skip the user configuration, as the number og keys ther varies.
-  if [[ ! $file =~ ^(users.yaml)$ ]]; then
+  if [[ $file =~ ^(users.yaml)$ ]]; then
     continue
   fi
   

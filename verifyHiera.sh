@@ -27,6 +27,11 @@ for file in $(ls -1 $liveDir); do
   if [[ ! $file =~ ^(.*\.yaml)$ ]]; then
     continue
   fi
+
+  # Skip the user configuration, as the number og keys ther varies.
+  if [[ ! $file =~ ^(users.yaml)$ ]]; then
+    continue
+  fi
   
   # Print an error if the file does not exist in the example dir.
   if [[ -z ${exampleFiles["${file//./_}"]} ]]; then

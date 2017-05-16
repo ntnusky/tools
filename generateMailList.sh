@@ -12,7 +12,7 @@ HIERAFILE2='/etc/puppet/hieradata/common.yaml'
 HIERACONFIG='/etc/puppet/hiera.yaml'
 HIERACMD1="$HIERA -y $HIERAFILE1 -c $HIERACONFIG"
 HIERACMD2="$HIERA -y $HIERAFILE2 -c $HIERACONFIG"
-LOCALFILE="/root/scripts/skyhigh-mail.txt"
+LOCALFILE="/var/tmp/skyhigh-mail.txt"
 REMOTEFILE="monitor.skyhigh.hig.no:/var/www/html/skyhigh-mail.txt"
 TODAY=$(date +%F)
 

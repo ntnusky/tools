@@ -22,6 +22,10 @@ if [[ ! $(hostname) =~ controller ]]; then
   exit 3
 fi
 
+echo "$1 apache2..."
+systemctl $1 apache2
+$step || read -n 1 -s -p "Press any key to continue"
+
 echo "$1 glance-registry..."
 systemctl $1 glance-registry
 $step || read -n 1 -s -p "Press any key to continue"
@@ -72,10 +76,6 @@ systemctl $1 heat-api-cfn
 $step || read -n 1 -s -p "Press any key to continue"
 echo "$1 heat-engine..."
 systemctl $1 heat-engine
-$step || read -n 1 -s -p "Press any key to continue"
-
-echo "$1 apache2..."
-systemctl $1 apache2
 $step || read -n 1 -s -p "Press any key to continue"
 
 echo "$1 openvswitch-switch..."

@@ -22,10 +22,6 @@ if [[ ! $(hostname) =~ controller ]]; then
   exit 3
 fi
 
-echo "$1 keystone..."
-systemctl $1 keystone
-$step || read -n 1 -s -p "Press any key to continue"
-
 echo "$1 glance-registry..."
 systemctl $1 glance-registry
 $step || read -n 1 -s -p "Press any key to continue"

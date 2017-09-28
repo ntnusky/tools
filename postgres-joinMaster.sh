@@ -20,5 +20,9 @@ echo Starting base backup as replicator
 sudo -u postgres pg_basebackup -h $host -D /var/lib/postgresql/9.6/main \
     -U replicator -v -P -w -R
 
+echo Add trigger config
+echo "trigger_file = '/var/lib/postgresql/9.6/main/triggerfile'" >> \
+    /var/lib/postgresql/9.6/main/recovery.conf
+
 echo Startging PostgreSQL
 systemctl start postgresql

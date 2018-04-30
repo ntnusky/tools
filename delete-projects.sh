@@ -23,7 +23,7 @@ for projectID in $(openstack project list | grep "$1" | awk '{ print $2 }'); do
   else
     dryRun=0
     echo "Deleting project: $projectName ($projectID)"
-  
+
     # Add current user to project
     echo "Verifies that the current user actually is a member of the project"
     isMember=$(openstack role assignment list --project $projectName --user $userID \
@@ -96,10 +96,10 @@ for projectID in $(openstack project list | grep "$1" | awk '{ print $2 }'); do
 
     # Delete all floating IP's
     echo "Deleting floating IP's"
-    ips=$(openstack ip floating list | \
+    ips=$(openstack floating ip list | \
       egrep [0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12} -o)
     for ip in $ips; do
-      openstack ip floating delete $ip
+      openstack floating ip delete $ip
     done
 
     # Deleting all router->network links
@@ -129,28 +129,27 @@ for projectID in $(openstack project list | grep "$1" | awk '{ print $2 }'); do
     echo "Deleting all routers"
     routers=$(openstack router list | \
       egrep \[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12} -o)
-    for router in $routers; do 
+    for router in $routers; do
       openstack router delete $router
     done
 
     # Delete all subnets
     echo "Deleting subnets"
-    subnets=$(openstack subnet list | \
-      egrep [0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12} -o)
+    subnets=$(openstack subnet list -f value -c ID)
     for subnet in $subnets; do
       openstack subnet delete $subnet
     done
 
     # Delete all networks
     echo "Deleting networks"
-    networks=$(openstack network list | \
-      egrep [0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12} -o)
+    networks=$(openstack network list --long -f value -c ID -c Project | \
+      grep $projectID | cut -d' ' -f1)
     for network in $networks; do
       openstack network delete $network
     done
 
     # Delete all firewalls, policies and rules
-    echo "Deleteing firewalls"
+    echo "Deleting firewalls"
     fws=$(neutron firewall-list -f value -c id)
     for fw in $fws; do
       neutron firewall-delete $fw
@@ -161,7 +160,7 @@ for projectID in $(openstack project list | grep "$1" | awk '{ print $2 }'); do
     for policy in $policis; do
       neutron firewall-policy-delete $policy
     done
-    
+
     echo "Deleting firewall rules"
     rules=$(neutron firewall-rule-list -f value -c id)
     for rule in $rules; do

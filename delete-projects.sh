@@ -93,12 +93,20 @@ for projectID in $(openstack project list | grep "$1" | awk '{ print $2 }'); do
       openstack image set --unprotected $image
       openstack image delete $image
     done
-  
+
+    # Delete all floating IP's
+    echo "Deleting floating IP's"
+    ips=$(openstack ip floating list | \
+      egrep [0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12} -o)
+    for ip in $ips; do
+      openstack ip floating delete $ip
+    done
+
     # Deleting all router->network links
     echo "Deleting all router->network links"
     routers=$(neutron router-list | \
       egrep \ [0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12} -o)
-    for router in $routers; do 
+    for router in $routers; do
       interfaces=$(neutron router-port-list $router -f value)
       IFS=$'\n'
       for interface in $interfaces; do
@@ -108,7 +116,7 @@ for projectID in $(openstack project list | grep "$1" | awk '{ print $2 }'); do
       done
       unset IFS
     done
-  
+
     # Delete all ports
     echo "Deleting ports"
     ports=$(neutron port-list | \
@@ -116,7 +124,7 @@ for projectID in $(openstack project list | grep "$1" | awk '{ print $2 }'); do
     for port in $ports; do
       neutron port-delete $port
     done
-  
+
     # Delete all routers
     echo "Deleting all routers"
     routers=$(openstack router list | \
@@ -124,7 +132,7 @@ for projectID in $(openstack project list | grep "$1" | awk '{ print $2 }'); do
     for router in $routers; do 
       openstack router delete $router
     done
-  
+
     # Delete all subnets
     echo "Deleting subnets"
     subnets=$(openstack subnet list | \
@@ -132,21 +140,13 @@ for projectID in $(openstack project list | grep "$1" | awk '{ print $2 }'); do
     for subnet in $subnets; do
       openstack subnet delete $subnet
     done
-  
+
     # Delete all networks
     echo "Deleting networks"
     networks=$(openstack network list | \
       egrep [0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12} -o)
     for network in $networks; do
       openstack network delete $network
-    done
-  
-    # Delete all floating IP's
-    echo "Deleting floating IP's"
-    ips=$(openstack ip floating list | \
-      egrep [0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12} -o)
-    for ip in $ips; do
-      openstack ip floating delete $ip
     done
 
     # Delete all firewalls, policies and rules

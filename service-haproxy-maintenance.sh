@@ -2,10 +2,10 @@
 
 declare -A servers
 
-servers['cinder1']="bk_cinder_api_public"
-servers['cinder2']="bk_cinder_api_public"
-servers['glance1']="bk_glance_api_public"
-servers['glance2']="bk_glance_api_public"
+servers['cinder1']="bk_cinder_public"
+servers['cinder2']="bk_cinder_public"
+servers['glance1']="bk_glance_public"
+servers['glance2']="bk_glance_public"
 servers['heat1']="bk_heat_public,bk_heat_cfn_public"
 servers['heat2']="bk_heat_public,bk_heat_cfn_public"
 servers['horizon1']="bk_horizon"

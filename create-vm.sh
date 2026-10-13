@@ -11,5 +11,5 @@ if [ $# -ne 5 ]; then
   exit 1
 fi
 
-virt-install --name $NAME --memory $RAM --vcpus $CPU --cpu host-passthrough --pxe --boot network,hd --os-variant ubuntu24.04 --disk size=$DISK,pool=vmvg -w network:$NET --noautoconsole --wait 0
+virt-install --name $NAME --memory $RAM --vcpus $CPU --cpu host-passthrough --pxe --boot network,hd --os-variant ubuntu24.04 --disk size=$DISK,pool=vmvg,sparse=false -w network:$NET --noautoconsole
 virsh domiflist $NAME
